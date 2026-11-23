@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Squishy Atölyesi 🍡 — mıncıkla & rahatla</title>
+<title>Melek's Squishy Workshop 🍡 — mıncıkla & rahatla</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
@@ -59,9 +59,9 @@ body::after{content:'';position:fixed;inset:0;z-index:99;pointer-events:none;opa
 .brand{display:flex;align-items:center;gap:10px;min-width:0}
 .logo{width:40px;height:40px;flex:none;transform-origin:50% 90%;animation:logoSquish 3.2s ease-in-out infinite}
 @keyframes logoSquish{0%,100%{transform:scale(1,1)}45%{transform:scale(1.1,.88)}60%{transform:scale(.95,1.06)}}
-.brand h1{font-family:'Fredoka';font-weight:700;font-size:20px;letter-spacing:.2px;white-space:nowrap}
+.brand h1{font-family:'Fredoka';font-weight:700;font-size:19px;letter-spacing:.2px;line-height:1.15}
 .brand .tag{display:block;font-size:11px;font-weight:700;color:var(--ink-soft);margin-top:-2px}
-.hud{display:flex;align-items:center;gap:10px}
+.hud{display:flex;align-items:center;gap:10px;flex:none}
 .chip{background:var(--surface2);border:1px solid var(--line);border-radius:99px;padding:6px 12px;font-weight:800;font-size:12.5px;white-space:nowrap}
 .chip b{font-family:'Fredoka';color:var(--acc1);font-size:14px}
 .chip.bump{animation:bump .28s}
@@ -158,15 +158,20 @@ button:focus-visible,select:focus-visible{outline:2px solid var(--acc3);outline-
   .stage-wrap{width:100%;height:56vh;min-height:360px}
   .panel{width:100%;position:static;max-height:none}
   .zen{min-width:110px}
+  /* dar masaüstü / tablet: başlık alta inebilir, HUD asla üstüne binmez */
+  .topbar{flex-wrap:wrap}
+  .brand{flex:1 1 100%}
+  .hud{flex:1 1 100%;justify-content:space-between}
 }
 @media (max-width:560px){
-  .topbar{padding:8px 10px;gap:8px}
-  .brand h1{font-size:15px}
+  .topbar{padding:8px 12px;gap:7px}
+  .brand h1{font-size:16.5px}
   .brand .tag{display:none}
   .logo{width:30px;height:30px}
   .hud{gap:6px}
-  .chip{padding:5px 8px;font-size:11px}
-  .zen{min-width:84px}
+  .chip{padding:5px 9px;font-size:11px}
+  .zen{min-width:0;flex:1}
+  .zen-label{font-size:9.5px}
   .sound-btn span{display:none}
   .sound-btn{padding:8px 10px}
   .mode-seg button{padding:7px 10px;font-size:12px}
@@ -190,7 +195,7 @@ button:focus-visible,select:focus-visible{outline:2px solid var(--acc3);outline-
       <ellipse cx="17" cy="37" rx="4" ry="2.5" fill="#ff5c8a" opacity=".5"/><ellipse cx="47" cy="37" rx="4" ry="2.5" fill="#ff5c8a" opacity=".5"/>
       <ellipse cx="22" cy="18" rx="7" ry="4" fill="#fff" opacity=".45" transform="rotate(-20 22 18)"/>
     </svg>
-    <div><h1>Squishy Atölyesi</h1><span class="tag">mıncıkla • rahatla • repeat</span></div>
+    <div><h1>Melek's Squishy Workshop</h1><span class="tag">mıncıkla • rahatla • repeat</span></div>
   </div>
   <div class="hud">
     <div class="chip" id="countChip">🫳 <b id="squishCount">0</b> mıncık</div>
@@ -1159,7 +1164,7 @@ $('randomBtn').addEventListener('click',()=>{
 });
 $('pngBtn').addEventListener('click',()=>{
   const a=document.createElement('a');
-  a.download=`squishy-${PARAMS.char}.png`;
+  a.download=`meleks-squishy-${PARAMS.char}.png`;
   a.href=canvas.toDataURL('image/png');a.click();
   toast('📸 Kare kaydedildi, çerçevelet aga');AudioSys.pop();
 });
@@ -1181,12 +1186,13 @@ let saveT=null;
 function save(){
   clearTimeout(saveT);
   saveT=setTimeout(()=>{
-    try{localStorage.setItem('squishy-atolye-v1',JSON.stringify({p:PARAMS,squishTotal,zenLv,zenP}));}catch(_){}
+    try{localStorage.setItem('meleks-squishy-v1',JSON.stringify({p:PARAMS,squishTotal,zenLv,zenP}));}catch(_){}
   },400);
 }
 function restore(){
   try{
-    const d=JSON.parse(localStorage.getItem('squishy-atolye-v1'));
+    let d=JSON.parse(localStorage.getItem('meleks-squishy-v1'));
+    if(!d)d=JSON.parse(localStorage.getItem('squishy-atolye-v1')); // eski kaydı da taşı
     if(!d)return;
     Object.assign(PARAMS,d.p||{});
     squishTotal=d.squishTotal||0;zenLv=d.zenLv||1;zenP=d.zenP||0;
